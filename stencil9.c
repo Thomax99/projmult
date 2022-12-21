@@ -8,14 +8,32 @@
 #define SIZEX 10000
 #define SIZEY 10000
 
-void stencil9(float *a, const float *b) {
+void stencil9(float * restrict a, const float * restrict b) {
   int i,j;
-    for (i=2; i<SIZEX-2; i++){
-     for (j=2; j<SIZEY-2; j++) 
-      a[i*SIZEY+j] = (8*b[i*SIZEY+j] + b[(i+1)*SIZEY+j] + b[(i+2)*SIZEY+j] 
-			+ b[(i-1)*SIZEY+j] + b[(i-2)*SIZEY+j] + b[i*SIZEY+j+1]
-			+ b[i*SIZEY+j-1] + b[i*SIZEY+j-2] + b[i*SIZEY+j+2])/9.;
+  int sizeij = 2*SIZEY+2, sizeip1j, sizeip2j, sizeim1j, sizeim2j, sizeijp1, sizeijm1, sizeijm2, sizeijp2 ;
+  sizeip2j = sizeip1j+SIZEY ;
+  sizeim1j = sizeij - SIZEY ;
+  sizeim2j = sizeim1j - SIZEY ;
+  sizeijp1 = sizeij+1 ;
+  sizeijp2 = sizeijp1+1;
+  sizeijm1 = sizeij-1 ;
+  sizeijm2 = sizeijm1-1 ;	
+  for (i=2; i<SIZEX-2; i++){
+     sizeij += 4 ;
+     sizeip2j += 4;
+     sizeip1j += 4;
+     sizeim1j += 4;
+     sizeim2j += 4;
+     sizeijp1 += 4;
+     sizeijp2 += 4;
+     sizeijm1 += 4;
+     sizeijm2 += 4;
+     for (j=2; j<SIZEY-2; j++, sizeij++, sizeip1j++, sizeip2j++, sizeim1j++, sizeim2j++, sizeijp1++, sizeijp2++, sizeijm1++, sizeijm2++) {
+	          a[sizeij] = (8*b[sizeij] + b[sizeip1j] + b[sizeip2j] 
+			+ b[sizeim1j] + b[sizeim2j] + b[sizeijp1]
+			+ b[sizeijm1] + b[sizeijm2] + b[sizeijp2])/9.;
 
+      }
     }
 }
 float dot1D(float *a,float *b,int n)  {
