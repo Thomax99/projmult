@@ -10,11 +10,13 @@
 
 void stencil9(float *a, const float *b) {
   int i,j;
-  for (j=2; j<SIZEY-2; j++) 
-    for (i=2; i<SIZEX-2; i++) 
+    for (i=2; i<SIZEX-2; i++){
+     for (j=2; j<SIZEY-2; j++) 
       a[i*SIZEY+j] = (8*b[i*SIZEY+j] + b[(i+1)*SIZEY+j] + b[(i+2)*SIZEY+j] 
 			+ b[(i-1)*SIZEY+j] + b[(i-2)*SIZEY+j] + b[i*SIZEY+j+1]
 			+ b[i*SIZEY+j-1] + b[i*SIZEY+j-2] + b[i*SIZEY+j+2])/9.;
+
+    }
 }
 float dot1D(float *a,float *b,int n)  {
   int i;
